@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area, ComposedChart, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { AlertCircle, TrendingDown, DollarSign } from 'lucide-react';
 
@@ -542,7 +542,7 @@ function TaxVisualizer() {
   };
 
   // Calculate total credits and benefits
-  const calculateCreditsAndBenefits = (income) => {
+  const calculateCreditsAndBenefits = useCallback((income) => {
     let totalCredits = 0;
     const creditBreakdown = {};
     
@@ -556,7 +556,7 @@ function TaxVisualizer() {
     });
     
     return { total: totalCredits, breakdown: creditBreakdown };
-  };
+  }, [enabledCredits, numDependents]);
 
   // Find danger zones where net income decreases
   const findDangerZones = (data) => {
@@ -633,7 +633,7 @@ function TaxVisualizer() {
     } else {
       setDangerZones([]);
     }
-  }, [selectedState, maxIncome, showDangerZones, enabledCredits, numDependents]);
+  }, [selectedState, maxIncome, showDangerZones, enabledCredits, numDependents, calculateCreditsAndBenefits]);
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }) => {
